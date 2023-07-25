@@ -37,15 +37,34 @@ fetch('/posts')
             reqbtn.style.margin="0px 0px 0px 0px";
             reqbtn.innerHTML = "Request Book";
             reqbtn.style.background = "lightblue";
-            reqbtn.id = `${text.id}req;`;
+            reqbtn.id = `${text.id}req`;
  
+            emailfield = document.createElement('input');
+            emailfield.setAttribute('type', 'text');
+            emailfield.setAttribute('placeholder', 'Input Email');
+            emailfield.setAttribute('hidden', true);
+            emailfield.id = `${text.id}emailfield`;
             post.append(title);
             post.append(description);
             post.append(del);
-            post.append(req);
+            post.append(emailfield);
+            post.append(reqbtn);
             posts.append(post);
 
-            document.getElementById(`${text.id}del`).addEventListener("click", (delPost)=> {
+            document.getElementById(`${text.id}req`).addEventListener("click", ()=> {
+                document.getElementById(`${text.id}emailfield`).setAttribute('hidden', false);
+                console.log(1);
+                fetch('/request', {
+                    method: 'POST',
+                    data: {csrfmiddlewaretoken: "{{ csrf_token }}", state:"inactive"},
+                    body: JSON.stringify({
+                       id : text.id
+                   })} 
+                ) 
+                
+            })
+
+            document.getElementById(`${text.id}del`).addEventListener("click", ()=> {
                 document.getElementById(text.id).remove();
                 console.log(1);
                 fetch('/posts', {
